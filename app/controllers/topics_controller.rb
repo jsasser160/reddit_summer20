@@ -1,19 +1,23 @@
 class TopicsController < ApplicationController
+  before_action :set_topic, only: [:show, :edit, :destroy, :update]
+  before_action :set_sub
+
+  # Topic -> @sub.topics
+
   def index
-    @topics = Topic.all
+    @topics = @sub.topics
   end
 
   def show
-    @topic = Topic.find(params[:id])
   end
 
   def new
-    @topic = Topic.new
+    @topic = @sub.topics.new
     render partial: 'form'
   end
 
   def create
-    @topic = Topic.new(topic_params)
+    @topic = @sub.topics(topic_params)
     if @topic.save
      redirect_to [@sub, @topic]
     else
@@ -22,12 +26,10 @@ class TopicsController < ApplicationController
   end
 
   def edit
-    @topic = topic.find(params[:id])
     render partial: 'form'
   end
 
   def update
-    @topic = Topic.find(params[:id])
     if @topic.update(topic_params)
       redirect_to [@sub, @topic]
     else
@@ -36,7 +38,7 @@ class TopicsController < ApplicationController
   end
 
   def destroy
-    Topic.find(params[:id]).destroy
+    @topic.destroy
     redirect_to sub_topics_path(@sub)
   end
 
@@ -44,3 +46,12 @@ private
   def topic_params
     params.require(:topic).permit(:title, :body)
   end
+
+  def set_topic
+    @topic = topic.find(params[:id])
+  end
+
+  def set_sub
+    @sub = Sub.find(params[:sub_id])
+  end
+end
