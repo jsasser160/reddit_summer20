@@ -1,5 +1,5 @@
 class TopicsController < ApplicationController
-  before_action :set_topic, only: [:show, :edit, :destroy, :update]
+  before_action :set_topic, only: [:show, :edit, :update, :destroy]
   before_action :set_sub
 
   # Topic -> @sub.topics
@@ -13,11 +13,11 @@ class TopicsController < ApplicationController
 
   def new
     @topic = @sub.topics.new
-    render partial: 'form'
+    render partial: "form"
   end
 
   def create
-    @topic = @sub.topics(topic_params)
+    @topic = @sub.topics.new(topic_params)
     if @topic.save
      redirect_to [@sub, @topic]
     else
@@ -26,7 +26,7 @@ class TopicsController < ApplicationController
   end
 
   def edit
-    render partial: 'form'
+    render partial: "form"
   end
 
   def update
@@ -48,7 +48,7 @@ private
   end
 
   def set_topic
-    @topic = topic.find(params[:id])
+    @topic = Topic.find(params[:id])
   end
 
   def set_sub
